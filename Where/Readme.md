@@ -1,5 +1,5 @@
 
-# dvdrental SQL Project
+# dvdrental Where SQL Project
 
 ## Project Link
 [GitHub Repository Link](https://github.com/yourusername/dvdrental-sql-project)
