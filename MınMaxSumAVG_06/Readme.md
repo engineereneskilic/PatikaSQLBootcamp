@@ -45,7 +45,7 @@ This query calculates the average rental rate from all records in the `film` tab
 **Example Result:**
 | average_rental_rate |
 |---------------------|
-| 3.02                |
+| 2.98                |
 
 ---
 
@@ -64,7 +64,7 @@ Counts the number of films where the `title` begins with the letter 'C', using t
 **Example Result:**
 | count_of_c_titles |
 |-------------------|
-| 60                |
+| 92                |
 
 ---
 
@@ -102,7 +102,7 @@ Counts the unique values of `replacement_cost` for films with a length greater t
 **Example Result:**
 | unique_replacement_cost_count |
 |-------------------------------|
-| 12                            |
+| 21                            |
 
 ---
 
