@@ -1,5 +1,5 @@
 
-# SQL Queries on DVD Rental Database
+# SQL Queries on DVD Rental Database - Limit Offset
 
 ## Project Name
 **SQL Queries on DVD Rental Database**
