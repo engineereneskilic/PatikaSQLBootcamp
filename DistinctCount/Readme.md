@@ -1,5 +1,5 @@
 
-# DVD Rental Database Queries
+# DVD Rental Database Queries - Distinct Count
 
 This project contains SQL queries executed on the `dvdrental` sample database. The goal is to retrieve specific information from various tables in the database, including unique values, counts, and pattern matching.
 
