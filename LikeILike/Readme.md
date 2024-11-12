@@ -1,4 +1,4 @@
-# DVD Rental Database Queries
+# DVD Rental Database Queries - Like ILike
 
 This README file provides an overview of the DVD Rental Database Queries project, which involves performing SQL queries on the `dvdrental` sample database. The project aims to demonstrate how to retrieve and sort data based on specified conditions using SQL commands.
 
