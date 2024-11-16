@@ -1,7 +1,7 @@
 
-# DVDRental SQL Query Examples - INTERSECT ve EXCEPT
+# DVDRental SQL Query Examples - Intersect Except
 
-This repository contains SQL queries designed for the **DVDRental** sample database. The queries demonstrate the use of different SQL joins, such as `LEFT JOIN`, `RIGHT JOIN`, and `FULL JOIN`, to solve real-world database scenarios.
+This repository contains advanced SQL queries designed for the **DVDRental** sample database. The queries demonstrate the use of set operations like `UNION`, `INTERSECT`, and `EXCEPT` to compare and manipulate data between the `actor` and `customer` tables.
 
 ---
 
@@ -10,9 +10,12 @@ This repository contains SQL queries designed for the **DVDRental** sample datab
 2. [Prerequisites](#prerequisites)
 3. [Database Schema Overview](#database-schema-overview)
 4. [SQL Queries](#sql-queries)
-   - [1. LEFT JOIN: City and Country Names](#1-left-join-city-and-country-names)
-   - [2. RIGHT JOIN: Customer and Payment Information](#2-right-join-customer-and-payment-information)
-   - [3. FULL JOIN: Customer and Rental Information](#3-full-join-customer-and-rental-information)
+   - [1. All Names from Both Tables](#1-all-names-from-both-tables)
+   - [2. Common Names Between Tables](#2-common-names-between-tables)
+   - [3. Names in Actor Only](#3-names-in-actor-only)
+   - [4. All Names Including Duplicates](#4-all-names-including-duplicates)
+   - [5. Common Names Including Duplicates](#5-common-names-including-duplicates)
+   - [6. Names in Actor Only Including Duplicates](#6-names-in-actor-only-including-duplicates)
 5. [Usage](#usage)
 6. [Contributing](#contributing)
 7. [License](#license)
@@ -20,118 +23,157 @@ This repository contains SQL queries designed for the **DVDRental** sample datab
 ---
 
 ## Introduction
-The **DVDRental** sample database is commonly used for practicing SQL queries. This repository includes examples of `JOIN` operations that combine data from multiple tables to retrieve meaningful insights.
+The **DVDRental** database provides a rich set of data for practicing SQL. This document focuses on set operations to solve real-world scenarios such as finding common or distinct data between two tables.
 
 ---
 
 ## Prerequisites
-- A PostgreSQL database instance installed on your system.
-- The DVDRental sample database imported into PostgreSQL. You can download it from [PostgreSQL Sample Databases](https://www.postgresqltutorial.com/postgresql-sample-database/).
-- A SQL client tool such as pgAdmin or DBeaver.
+- PostgreSQL database installed and running.
+- The DVDRental database imported into your PostgreSQL instance.
+- A SQL client such as pgAdmin or DBeaver.
 
 ---
 
 ## Database Schema Overview
 Key tables used in the queries:
-- **city**: Contains city information with a reference to its associated country.
-- **country**: Contains country information.
-- **customer**: Stores customer details.
-- **payment**: Records payment transactions.
-- **rental**: Tracks rental transactions.
+- **actor**: Stores actor information, including `first_name`.
+- **customer**: Stores customer information, including `first_name`.
 
 ---
 
 ## SQL Queries
 
-### 1. LEFT JOIN: City and Country Names
-This query retrieves all cities from the `city` table and matches them with their corresponding countries in the `country` table. If a city does not have a corresponding country, the country field will show `NULL`.
+### 1. All Names from Both Tables
+This query retrieves all unique names from the `actor` and `customer` tables.
 
 ```sql
-SELECT 
-    city.city_id,
-    city.city AS city_name,
-    country.country_id,
-    country.country AS country_name
-FROM 
-    city
-LEFT JOIN 
-    country
-ON 
-    city.country_id = country.country_id;
+SELECT first_name
+FROM actor
+UNION
+SELECT first_name
+FROM customer
+ORDER BY first_name;
 ```
 
 #### Output:
-| city_id | city_name       | country_id | country_name  |
-|---------|-----------------|------------|---------------|
-| 1       | Athenai         | 1          | Greece        |
-| 2       | Albuquerque     | NULL       | NULL          |
-| 3       | Berlin          | 2          | Germany       |
+| first_name |
+|------------|
+| Alice      |
+| Bob        |
+| Mary       |
 
 ---
 
-### 2. RIGHT JOIN: Customer and Payment Information
-This query retrieves all payments from the `payment` table and matches them with the `customer` table. If a payment does not have a corresponding customer, the customer fields will show `NULL`.
+### 2. Common Names Between Tables
+This query retrieves names that exist in both the `actor` and `customer` tables.
 
 ```sql
-SELECT 
-    payment.payment_id,
-    customer.customer_id,
-    customer.first_name,
-    customer.last_name
-FROM 
-    customer
-RIGHT JOIN 
-    payment
-ON 
-    customer.customer_id = payment.customer_id;
+SELECT first_name
+FROM actor
+INTERSECT
+SELECT first_name
+FROM customer
+ORDER BY first_name;
 ```
 
 #### Output:
-| payment_id | customer_id | first_name | last_name |
-|------------|-------------|------------|-----------|
-| 1          | 1           | Mary       | Smith     |
-| 2          | 2           | John       | Doe       |
-| 3          | NULL        | NULL       | NULL      |
+| first_name |
+|------------|
+| Alice      |
+| Bob        |
 
 ---
 
-### 3. FULL JOIN: Customer and Rental Information
-This query retrieves all records from the `customer` and `rental` tables, including customers without rentals and rentals without associated customers.
+### 3. Names in Actor Only
+This query retrieves names that are in the `actor` table but not in the `customer` table.
 
 ```sql
-SELECT 
-    rental.rental_id,
-    customer.customer_id,
-    customer.first_name,
-    customer.last_name
-FROM 
-    customer
-FULL JOIN 
-    rental
-ON 
-    customer.customer_id = rental.customer_id;
+SELECT first_name
+FROM actor
+EXCEPT
+SELECT first_name
+FROM customer
+ORDER BY first_name;
 ```
 
 #### Output:
-| rental_id | customer_id | first_name | last_name  |
-|-----------|-------------|------------|------------|
-| 1         | 1           | Mary       | Smith      |
-| 2         | NULL        | NULL       | NULL       |
-| NULL      | 3           | Anna       | Johnson    |
+| first_name |
+|------------|
+| Mary       |
+
+---
+
+### 4. All Names Including Duplicates
+This query retrieves all names from both tables, including duplicates.
+
+```sql
+SELECT first_name
+FROM actor
+UNION ALL
+SELECT first_name
+FROM customer
+ORDER BY first_name;
+```
+
+#### Output:
+| first_name |
+|------------|
+| Alice      |
+| Alice      |
+| Bob        |
+| Mary       |
+
+---
+
+### 5. Common Names Including Duplicates
+This query retrieves common names between both tables, including duplicates.
+
+```sql
+SELECT first_name
+FROM actor
+INNER JOIN customer
+ON actor.first_name = customer.first_name
+ORDER BY first_name;
+```
+
+#### Output:
+| first_name |
+|------------|
+| Alice      |
+| Alice      |
+| Bob        |
+
+---
+
+### 6. Names in Actor Only Including Duplicates
+This query retrieves names from the `actor` table that are not in the `customer` table, including duplicates.
+
+```sql
+SELECT first_name
+FROM actor
+LEFT JOIN customer
+ON actor.first_name = customer.first_name
+WHERE customer.first_name IS NULL
+ORDER BY first_name;
+```
+
+#### Output:
+| first_name |
+|------------|
+| Mary       |
+| Mary       |
 
 ---
 
 ## Usage
-To execute the queries:
 1. Open your SQL client tool.
-2. Connect to the PostgreSQL database where the **DVDRental** database is imported.
-3. Copy and paste the queries into the query editor and execute them.
-4. Review the results to understand the relationship between the tables.
+2. Connect to the PostgreSQL database containing the DVDRental schema.
+3. Execute the queries to understand the relationships between the `actor` and `customer` tables.
 
 ---
 
 ## Contributing
-Contributions are welcome! Feel free to submit a pull request if you have optimized queries or additional examples.
+Contributions are welcome! Please submit a pull request with additional queries or optimizations.
 
 ---
 
