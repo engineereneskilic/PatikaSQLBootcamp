@@ -1,5 +1,5 @@
 
-# DVDRental SQL Queries - README
+# DVDRental SQL Queries - Any All
 
 ## Introduction
 This repository contains SQL queries to analyze the **dvdrental** database. The queries cover various scenarios such as filtering, aggregations, and ranking based on specific criteria.
